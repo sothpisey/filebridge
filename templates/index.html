@@ -11,6 +11,14 @@
 <body>
     <div class="container">
         <h1>📂FileBridge📂</h1>
+        <h3>Folder List</h3>
+        <ul>
+            {% for folder in folders %}
+            <li><a href="">{{folder}}</a></li>
+            {% endfor %}
+        </ul>
+        <div style="padding: 8px; border-radius: 8px; margin-top: 20px; background-color: #222831;"></div>
+        <h3>File List</h3>
         <ul>
             <li><a href="">..</a></li>
             {% for file in files %}
