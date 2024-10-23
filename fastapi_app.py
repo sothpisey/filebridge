@@ -19,9 +19,10 @@ templates = Jinja2Templates(directory='templates')
 def list_files(request: Request):  # Make sure to include 'Request' in the parameters
     '''Return an HTML page listing all files in the selected directory.'''
     files = [str(file.relative_to(BASE_DIR)) for file in BASE_DIR.iterdir() if file.is_file() and file.name != 'desktop.ini']
+    folders = [folder for folder in BASE_DIR.iterdir() if folder.is_dir()]
 
     # Render the HTML using the Jinja2 template, passing the request object
-    return templates.TemplateResponse('index.html', {'request': request, 'files': files})
+    return templates.TemplateResponse('index.html', {'request': request, 'files': files, 'folders': folders})
 
 @app.get('/download/{file_name}')
 def download_file(file_name: str):
