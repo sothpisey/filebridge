@@ -56,3 +56,21 @@ li:hover {
 li:hover a {
     color: rgb(0, 0, 0);
 }
+
+/* Back Button*/
+.back-btn {
+    border: none;
+    margin: 0;
+    align-items: center;
+    padding: 8px 25px 8px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: rgb(255, 0, 0);
+    color: white;
+}
+
+.back-btn:hover {
+    background-color: cyan;
+    color: rgb(100, 100, 100);
+}

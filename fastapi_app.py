@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -24,9 +24,17 @@ def list_files(request: Request):  # Make sure to include 'Request' in the param
     folders = [folder for folder in BASE_DIR.iterdir() if folder.is_dir()]
     # URL-encode the folder paths
     encoded_folders = [quote(str(item)) for item in BASE_DIR.iterdir() if item.is_dir()]
+    parent_dir = quote(str(BASE_DIR.parent))
 
     # Render the HTML using the Jinja2 template, passing the request object
-    return templates.TemplateResponse('index.html', {'request': request, 'files': files, 'folders': folders, 'encoded_folders': encoded_folders, 'zip': zip})
+    return templates.TemplateResponse('index.html', {
+        'request': request,
+        'files': files,
+        'folders': folders,
+        'encoded_folders': encoded_folders,
+        'zip': zip,
+        'parent_dir': parent_dir
+    })
 
 @app.get('/download/{file_name}')
 def download_file(file_name: str):
@@ -43,5 +51,5 @@ def change_directory(new_dir: str):
     base_path = Path(new_dir)
     if base_path.exists() and base_path.is_dir():
         BASE_DIR = base_path
-        return {'message': f'Serving files from {BASE_DIR}'}
+        return RedirectResponse(url='/')
     raise HTTPException(status_code=400, detail='Directory does not exist.')

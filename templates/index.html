@@ -6,23 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Bridge</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <script>
+        function goToUrl(url) {
+            window.location.href = url;
+        }
+    </script>
 </head>
 
 <body>
     <div class="container">
         <h1>📂FileBridge📂</h1>
+        <button class="back-btn" onclick="goToUrl('/change-directory/{{ parent_dir }}')"><span>Back</span></button>
         <h3>Folder List</h3>
         <ul>
             {% for encoded_folder, folder in zip(encoded_folders, folders) %}
-            <li><a href="/change-directory/{{ encoded_folder }}" target="_blank">{{ folder.name }}</a></li>
+            <li><a class="list-item" href="/change-directory/{{ encoded_folder }}" target="_self">{{ folder.name }}</a></li>
             {% endfor %}
         </ul>
         <div style="padding: 8px; border-radius: 8px; margin-top: 20px; background-color: #222831;"></div>
         <h3>File List</h3>
         <ul>
-            <li><a href="">..</a></li>
             {% for file in files %}
-            <li><a href="/download/{{ file }}">{{ file }}</a></li>
+            <li><a class="list-item" href="/download/{{ file }}">{{ file }}</a></li>
             {% endfor %}
         </ul>
     </div>
