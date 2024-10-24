@@ -15,9 +15,17 @@
 
 <body>
     <div class="container">
-        <h1>📂FileBridge📂</h1>
-        <button class="back-btn" onclick="goToUrl('/change-directory/{{ parent_dir }}')"><span>Back</span></button>
+        <h1>FileBridge</h1>
+        <div class="nav-container">
+            <div>
+                <button class="back-btn" onclick="goToUrl('/change-directory/{{ parent_dir }}')"><span>Back</span></button>
+            </div>
+            <div class="div-dir-name">
+                <div class="dir-name">📂: {{ BASE_DIR.name }}</div>
+            </div>
+        </div>
         {% if folders %}
+        <div class="line-break"></div>
         <h3>Folder List</h3>
         <ul>
             {% for encoded_folder, folder in zip(encoded_folders, folders) %}
@@ -27,7 +35,7 @@
         {% endif %}
 
         {% if files %}
-        <div style="padding: 8px; border-radius: 8px; margin-top: 20px; background-color: #222831;"></div>
+        <div class="line-break"></div>
         <h3>File List</h3>
         <ul>
             {% for file in files %}

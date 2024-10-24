@@ -33,7 +33,8 @@ def list_files(request: Request):  # Make sure to include 'Request' in the param
         'folders': folders,
         'encoded_folders': encoded_folders,
         'zip': zip,
-        'parent_dir': parent_dir
+        'parent_dir': parent_dir,
+        'BASE_DIR': BASE_DIR
     })
 
 @app.get('/download/{file_name}')

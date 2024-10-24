@@ -25,6 +25,34 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* .line-break {
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 40px;
+    background-color: #222831;
+} */
+
+/* Directory Name */
+.nav-container {
+    display: flex;
+    padding: 0 0 20px 0;
+}
+.div-dir-name {
+    margin: 0 50px 0 50px;
+    padding: 8px 20px 8px 20px;
+    border-radius: 20px;
+    background-color: #222831;
+    text-align: center;
+}
+
+.dir-name {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 20px;
+    color: cyan;
+}
+
 h3 {
     color: cyan;
     margin: 10px;
