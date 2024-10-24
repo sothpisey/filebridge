@@ -13,8 +13,8 @@
         <h1>📂FileBridge📂</h1>
         <h3>Folder List</h3>
         <ul>
-            {% for folder in folders %}
-            <li><a href="">{{folder}}</a></li>
+            {% for encoded_folder, folder in zip(encoded_folders, folders) %}
+            <li><a href="/change-directory/{{ encoded_folder }}" target="_blank">{{ folder.name }}</a></li>
             {% endfor %}
         </ul>
         <div style="padding: 8px; border-radius: 8px; margin-top: 20px; background-color: #222831;"></div>
