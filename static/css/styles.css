@@ -53,9 +53,23 @@ h1 {
     color: cyan;
 }
 
+
+/* DIV list items*/
+.div-block-list {
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background-color: #505154;
+}
+
+.div-list {
+    display: flex;
+}
+
 h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
     color: cyan;
-    margin: 10px;
 }
 
 ul {
@@ -67,13 +81,13 @@ li {
     margin: 5px 0;
     background-color: rgb(100, 100, 100);
     border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: background-color 0.5s;
 }
 
 li a {
     text-decoration: none;
     color: cyan;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
 }
 
@@ -96,6 +110,7 @@ li:hover a {
     font-size: 20px;
     background-color: rgb(255, 0, 0);
     color: white;
+    transition: background-color 0.5s;
 }
 
 .back-btn:hover {

@@ -24,24 +24,38 @@
                 <div class="dir-name">📂: {{ BASE_DIR.name }}</div>
             </div>
         </div>
+
+        {% if not files and not folders %}
+            <h2 style="color: cyan; text-align: center;">✨------------- Empty -------------✨</h2>
+        {% endif %}
+
         {% if folders %}
-        <div class="line-break"></div>
-        <h3>Folder List</h3>
-        <ul>
-            {% for encoded_folder, folder in zip(encoded_folders, folders) %}
-            <li><a class="list-item" href="/change-directory/{{ encoded_folder }}" target="_self">{{ folder.name }}</a></li>
-            {% endfor %}
-        </ul>
+        <div class="div-block-list">
+            <div class="line-break"></div>
+            <h3>Folder List</h3>
+            <div class="div-list">
+                <ul>
+                    {% for encoded_folder, folder in zip(encoded_folders, folders) %}
+                    <li><a class="list-item" href="/change-directory/{{ encoded_folder }}" target="_self">{{ folder.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
         {% endif %}
 
         {% if files %}
-        <div class="line-break"></div>
-        <h3>File List</h3>
-        <ul>
-            {% for file in files %}
-            <li><a class="list-item" href="/download/{{ file }}">{{ file }}</a></li>
-            {% endfor %}
-        </ul>
+        <div class="div-block-list">
+            <div class="line-break"></div>
+            <h3>File List</h3>
+            <div class="div-list">
+                <ul>
+                    {% for file in files %}
+                    <li><a class="list-item" href="/download/{{ file }}">{{ file }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
         {% endif %}
     </div>
 </body>
