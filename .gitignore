@@ -164,3 +164,4 @@ cython_debug/
 # My own file
 test.*
 test/
+config.json
