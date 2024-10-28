@@ -1,6 +1,5 @@
 from pathlib import Path
-from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Union
 import json
@@ -36,7 +35,7 @@ def create_folder_structure_json(path: Path) -> FileStructure:
 
 
 @router.get("/folder-structure", response_model=FileStructure)
-async def get_folder_structure(request: Request):
+async def get_folder_structure():
     folder_path = Path(path)
     folder_structure = create_folder_structure_json(folder_path)
-    return JSONResponse(folder_structure)
+    return folder_structure
