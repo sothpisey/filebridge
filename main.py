@@ -4,11 +4,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from urllib.parse import quote
+import json
+from routers import folder_structure
+from routers import download
 
 app = FastAPI()
 
+app.include_router(folder_structure.router, prefix='/api', tags=['API'])
+app.include_router(download.router, prefix='/api', tags=['API'])
+
 # This is the default directory to serve files from; can be changed dynamically
-BASE_DIR = Path('C:/Users/TUF/Pictures/Screenshots')
+with open('config.json', 'r') as file:
+    data = json.load(file)
+BASE_DIR = Path(data['path'])
 
 # Mount static files for serving
 app.mount('/static', StaticFiles(directory='static'), name='static')
@@ -36,21 +44,3 @@ def list_files(request: Request):  # Make sure to include 'Request' in the param
         'parent_dir': parent_dir,
         'BASE_DIR': BASE_DIR
     })
-
-@app.get('/download/{file_name}')
-def download_file(file_name: str):
-    '''Download a file from the specified directory.'''
-    file_path = BASE_DIR / file_name
-    if file_path.exists() and file_path.is_file():
-        return FileResponse(file_path, media_type='application/octet-stream', filename=file_name)
-    raise HTTPException(status_code=404, detail='File not found')
-
-@app.get('/change-directory/{new_dir}')
-def change_directory(new_dir: str):
-    '''Change the directory that the app serves files from.'''
-    global BASE_DIR
-    base_path = Path(new_dir)
-    if base_path.exists() and base_path.is_dir():
-        BASE_DIR = base_path
-        return RedirectResponse(url='/')
-    raise HTTPException(status_code=400, detail='Directory does not exist.')
