@@ -2,6 +2,7 @@ from pathlib import Path
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Union
+from urllib.parse import quote
 import json
 
 router = APIRouter()
@@ -30,7 +31,11 @@ def create_folder_structure_json(path: Path, BASE_DIR: Path) -> FileStructure:
         if entry.is_dir():
             result['children'].append(create_folder_structure_json(entry, BASE_DIR))
         else:
-            result['children'].append({'name': entry.name, 'type': 'file', 'download_link': f'/api/download/{entry.relative_to(BASE_DIR.absolute())}'})
+            result['children'].append({
+                'name': entry.name, 
+                'type': 'file', 
+                'download_link': '/api/download/' + quote(str(entry.relative_to(BASE_DIR.absolute())))
+            })
 
     return result
 
