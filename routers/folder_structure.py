@@ -22,10 +22,17 @@ class FileStructure(BaseModel):
 FileStructure.update_forward_refs()
 
 def create_folder_structure_json(path: Path, BASE_DIR: Path) -> FileStructure:
-    result = {'name': path.name, 'type': 'folder', 'download_link': 'None', 'children': []}
-
-    if not path.is_dir():
-        return result
+    def check_base_dir() -> str:
+        if str(path.relative_to(BASE_DIR.absolute())) == '.':
+            return '/'
+        else:
+            return '/api/download-folder/' + quote(str(path.relative_to(BASE_DIR.absolute())), safe='')
+        
+    result = {'name': path.name, 
+              'type': 'folder', 
+              'download_link': check_base_dir(), 
+              'children': []
+              }
 
     for entry in path.iterdir():
         if entry.is_dir():
@@ -34,7 +41,7 @@ def create_folder_structure_json(path: Path, BASE_DIR: Path) -> FileStructure:
             result['children'].append({
                 'name': entry.name, 
                 'type': 'file', 
-                'download_link': '/api/download/' + quote(str(entry.relative_to(BASE_DIR.absolute())))
+                'download_link': '/api/download/' + quote(str(entry.relative_to(BASE_DIR.absolute())), safe='')
             })
 
     return result
