@@ -37,7 +37,7 @@ def create_folder_structure_json(path: Path, BASE_DIR: Path) -> FileStructure:
     for entry in path.iterdir():
         if entry.is_dir():
             result['children'].append(create_folder_structure_json(entry, BASE_DIR))
-        else:
+        elif entry.name != 'desktop.ini':
             result['children'].append({
                 'name': entry.name, 
                 'type': 'file', 
