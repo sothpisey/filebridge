@@ -3,11 +3,25 @@ import random
 import base64
 import jwt
 from datetime import datetime, timedelta, timezone
+import json
+from pydantic import BaseModel
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 
 HS256_SECRET_KEY = base64.b64encode(random.randbytes(64)).decode('utf-8')
 ALGORITHM = 'HS256'
 JWT_TOKEN_EXPIRE_MINUTES = timedelta(minutes=30)
+
+
+with open('config.json', 'r') as file:
+    user_db = json.load(file)['user_db']
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
 def get_password_hash(password: str, salt: bytes = None, iterations: int = None) -> str:
@@ -42,3 +56,27 @@ def verify_token(jwt_token: str, hs256_secret_key: str = HS256_SECRET_KEY) -> bo
         return True
     except:
         return False
+    
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    if verify_token(token, HS256_SECRET_KEY):
+        pass
+    else:
+        raise credentials_exception
+
+
+router = APIRouter()
+
+
+@router.post('/token')
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+    jwt_token = generate_token(user_db, HS256_SECRET_KEY)
+    return Token(access_token=jwt_token, token_type='bearer')
