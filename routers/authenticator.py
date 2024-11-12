@@ -24,6 +24,17 @@ class Token(BaseModel):
     token_type: str
 
 
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
+
+
+class UserInDB(User):
+    hashed_password: str
+
+
 def get_password_hash(password: str, salt: bytes = None, iterations: int = None) -> str:
     if salt is None:
         salt = random.randbytes(16)
@@ -61,6 +72,20 @@ def verify_token(jwt_token: str, hs256_secret_key: str = HS256_SECRET_KEY) -> bo
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
+def get_user(user_db, username: str):
+    if username in user_db:
+        user_dict = user_db[username]
+        return UserInDB(**user_dict)
+    
+
+def authenticate_user(user_db, username: str, password: str):
+    user = get_user(user_db, username)
+    if not user:
+        return False
+    else:
+        return verify_password(password, user.hashed_password)
+
+
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -78,5 +103,12 @@ router = APIRouter()
 
 @router.post('/token')
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
-    jwt_token = generate_token(user_db, HS256_SECRET_KEY)
+    user = authenticate_user(user_db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    jwt_token = generate_token(user_db[form_data.username], HS256_SECRET_KEY)
     return Token(access_token=jwt_token, token_type='bearer')
