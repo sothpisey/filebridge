@@ -56,7 +56,7 @@ def generate_token(payload: dict, hs256_secret_key: str = HS256_SECRET_KEY, expi
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    payload.update({'exp': int(expire.timestamp())})
+    payload = {'username': payload['username'], 'exp': int(expire.timestamp())}
     jwt_token = jwt.encode(payload, hs256_secret_key, algorithm=ALGORITHM)
     return jwt_token
 
