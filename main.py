@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, HTTPException, Request, Depends, status
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -24,6 +24,12 @@ app.mount('/static', StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory='templates')
 
 @app.get('/', response_class=HTMLResponse)
-def list_files(request: Request, token: Annotated[str, Depends(authenticator.get_current_user)]):
-
+def list_files(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
+
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request, exc: HTTPException):
+    if exc.status_code == status.HTTP_401_UNAUTHORIZED:
+        return RedirectResponse(url="/login")
+    return await request.app.default_exception_handler(request, exc)

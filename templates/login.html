@@ -7,15 +7,28 @@
     <title>File Bridge - Login</title>
     <link rel="stylesheet" href="/static/css/login.css">
     <link rel="shortcut icon" href="/static/img/filebridge_favicon.png" type="image/x-icon">
+    <script src="/static/script/login.js" defer></script>
+    <script>
+        function checkAuthentication() {
+            const token = sessionStorage.getItem('jwt_token');
+
+            if (token) {
+                window.location.href = '/';
+                return;
+            }
+        }
+
+        checkAuthentication();
+    </script>
 </head>
 
 <body>
 
     <h1 class="title">File Bridge</h1>
     <div class="login-container">
-        <form class="login-form" action="/token" method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
+        <form class="login-form" id="loginForm">
+            <input id="username" type="text" name="username" placeholder="Username" required>
+            <input id="password" type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
     </div>

@@ -6,8 +6,10 @@ from datetime import datetime, timedelta, timezone
 import json
 from pydantic import BaseModel
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
 
 HS256_SECRET_KEY = base64.b64encode(random.randbytes(64)).decode('utf-8')
@@ -112,3 +114,9 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         )
     jwt_token = generate_token(user_db[form_data.username], HS256_SECRET_KEY)
     return Token(access_token=jwt_token, token_type='bearer')
+
+
+templates = Jinja2Templates(directory='templates')
+@router.get('/login', response_class=HTMLResponse)
+def list_files(request: Request):
+    return templates.TemplateResponse('login.html', {'request': request})

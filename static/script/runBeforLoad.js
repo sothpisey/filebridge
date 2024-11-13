@@ -73,5 +73,17 @@ function displayFolderStructure(item, container) {
   }
 }
 
-// Fetch and display folder structure on page load
-fetchFolderStructure();
+
+function checkAuthentication() {
+  const token = sessionStorage.getItem('jwt_token');
+
+  if (!token) {
+    window.location.href = '/login';
+    return;
+  } else {
+    fetchFolderStructure();
+  }
+}
+
+
+checkAuthentication();
