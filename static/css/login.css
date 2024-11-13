@@ -79,3 +79,43 @@ body {
 	border-color: #0ff;
 	color: #0ff;
 }
+
+.login-failed {
+    display: flex;
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    position: fixed;
+    top: 50px;
+    border-radius: 6px;
+    padding: 10px 20px;
+    border: 2px solid #222222;
+	box-shadow: 0 -5px 0 0 #222222;
+    color: #222222;
+    background-color: #222222;
+    border-color: #222222;
+    cursor: default;
+    transition: 0.5s ease;
+}
+
+.login-failed.active {
+    border: 2px solid #ff2020;
+    background-color: #333333;
+	box-shadow: 0 -5px 0 0 #ff2020, 0 0 10px #ff2020;
+    color: #ff2020;
+    text-shadow: 0 0 2px #ff2020;  
+    cursor: not-allowed;
+    transition: 0.5s ease;
+}
+
+.error-icon {
+    margin: 0 5px 0 0;
+    filter: opacity(0);
+    cursor: default;
+    transition: 0.5s ease;
+}
+
+.error-icon.active {
+    filter: opacity(1);
+    cursor: not-allowed;
+    transition: 0.5s ease;
+}

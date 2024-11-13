@@ -21,12 +21,23 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         const data = await response.json();
         const token = data.access_token;
-        const token_type = data.token_type;
 
         sessionStorage.setItem('jwt_token', token);
         window.location.href = '/';
     } catch (error) {
         console.error('Error:', error);
-        alert('Login failed');
+        loginFailedMessage();
     }
 });
+
+
+const loginFailed = document.getElementById('login-failed')
+const errorIcon = document.getElementById('error-icon')
+async function loginFailedMessage() {
+    loginFailed.classList.add('active');
+    errorIcon.classList.add('active')
+    setTimeout(() => {
+        loginFailed.classList.remove('active');
+        errorIcon.classList.remove('active')
+    }, 3000);
+}
