@@ -10,7 +10,7 @@ from typing import Annotated
 
 app = FastAPI()
 
-app.include_router(folder_structure.router, prefix='/api', tags=['API'])
+app.include_router(folder_structure.router, prefix='/api', tags=['API'], dependencies=[Depends(authenticator.get_current_user)])
 app.include_router(download.router, prefix='/api', tags=['API'], dependencies=[Depends(authenticator.get_current_user)])
 app.include_router(authenticator.router, tags=['OAuth2'])
 

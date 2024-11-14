@@ -63,9 +63,15 @@ function displayFolderStructure(item, container, isRoot = false) {
 }
 
 
-async function fetchFolderStructure() {
+async function fetchFolderStructure(jwt_token) {
   try {
-    const response = await fetch('/api/folder-structure');
+    const response = await fetch('/api/folder-structure', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt_token}`
+      }
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -78,8 +84,8 @@ async function fetchFolderStructure() {
     console.error('Failed to fetch folder structure:', error);
   }
 }
-
-fetchFolderStructure();
+const jwt_token = sessionStorage.getItem('jwt_token');
+fetchFolderStructure(jwt_token);
 
 
 document.addEventListener('DOMContentLoaded', function () {
