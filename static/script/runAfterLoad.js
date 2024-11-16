@@ -29,11 +29,10 @@ function displayFolderStructure(item, container, isRoot = false) {
     homeIcon.alt = 'Home';
     homeIcon.style.width = '16px';
     homeIcon.style.height = '16px';
+    homeIcon.style.cursor = 'not-allowed';
     
     if (isRoot) {
-      downloadLink.appendChild(homeIcon);
-      downloadLink.style.pointerEvents = 'none';
-      itemDiv.appendChild(downloadLink);
+      itemDiv.appendChild(homeIcon);
     } 
     else {
       downloadLink.appendChild(downloadIcon);
