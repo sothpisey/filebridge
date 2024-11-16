@@ -96,3 +96,63 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+
+// Helper function to extract filename from the Content-Disposition header
+function getFileNameFromResponse(response) {
+  const contentDisposition = decodeURIComponent(response.headers.get('Content-Disposition'));
+  const regex = /filename\*=.*''([^'']+)|filename=([^\s;]+)/;
+
+  if (contentDisposition) {
+    const match = contentDisposition.match(regex);
+
+    if (match) {
+      return decodeURIComponent(match[1] || match[2]).trim();
+    }
+  }
+
+  return "downloaded_file";
+}
+
+
+// Use event delegation to handle <a> tags dynamically added by JavaScript's fetch from a different endpoint
+document.addEventListener('click', async (event) => {
+  const link = event.target.closest('a.download-link');
+
+  if (!link) return;
+
+  event.preventDefault();
+
+  const url = link.href;
+  const jwt_token = sessionStorage.getItem('jwt_token');
+
+  console.log(url)
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt_token}`
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const fileName = getFileNameFromResponse(response);
+
+    // Create a temporary link to trigger the download
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(downloadLink.href);
+  } catch (error) {
+    console.error("Error downloading the file:", error);
+  }
+});
