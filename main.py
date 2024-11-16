@@ -26,10 +26,3 @@ templates = Jinja2Templates(directory='templates')
 @app.get('/', response_class=HTMLResponse)
 def list_files(request: Request):
     return templates.TemplateResponse('index.html', {'request': request})
-
-
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exc: HTTPException):
-    if exc.status_code == status.HTTP_401_UNAUTHORIZED:
-        return RedirectResponse(url="/login")
-    return await request.app.default_exception_handler(request, exc)
