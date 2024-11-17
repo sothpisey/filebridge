@@ -14,7 +14,7 @@ from fastapi.responses import HTMLResponse
 
 HS256_SECRET_KEY = base64.b64encode(random.randbytes(64)).decode('utf-8')
 ALGORITHM = 'HS256'
-JWT_TOKEN_EXPIRE_MINUTES = timedelta(minutes=30)
+JWT_TOKEN_EXPIRE_MINUTES = timedelta(minutes=60)
 
 
 with open('config.json', 'r') as file:
@@ -112,7 +112,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    jwt_token = generate_token(user_db[form_data.username], HS256_SECRET_KEY)
+    jwt_token = generate_token(user_db[form_data.username], HS256_SECRET_KEY, JWT_TOKEN_EXPIRE_MINUTES)
     return Token(access_token=jwt_token, token_type='bearer')
 
 
@@ -120,3 +120,8 @@ templates = Jinja2Templates(directory='templates')
 @router.get('/login', response_class=HTMLResponse)
 def list_files(request: Request):
     return templates.TemplateResponse('login.html', {'request': request})
+
+
+@router.get('/verify_token/{token}')
+async def check_token(token:str) -> bool:
+    return verify_token(token)
